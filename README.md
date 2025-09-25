@@ -11,7 +11,7 @@ docker pull xilinx/vitis-ai-cpu:2.5
 ```
 Run the docker from the correct directory:
 ```
-cd <your_path>/training/files
+cd <your_path>/training
 ./docker_run.sh xilinx/vitis-ai-cpu:2.5
 ```
 Activate the pytorch env and run the all-in-1 script:
