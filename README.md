@@ -1,5 +1,7 @@
 # hand-sign-translation-kv260
-Demo for CPS Summer School 2025
+*Demo for CPS Summer School 2025*:
+
+This demo showcases an application that recognizes hand sign language and converts it into text in real time. The system is deployed on the AMD Kria KV260 platform using the PYNQ framework. The classification task is performed by a CNN, which is accelerated on the FPGA’s Programmable Logic (PL) via the DPU, ensuring the low-latency requirements of the service are met.
 
 
 ## How to train, optimize and compile the model for KV260:
@@ -23,3 +25,9 @@ NOTE: the compiled model will be stored in the build directory, then you have to
 ## TODO:
 - video collection pipeline.
 - Yolo hands detection.
+
+## Red Team:
+- @smanoni (*UNIBO*)
+- @creinwar (*ETH*)
+- @balditommaso (*SSSA*)
+
