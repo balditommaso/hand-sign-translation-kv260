@@ -36,73 +36,40 @@ class CNN(nn.Module):
         super(CNN, self).__init__()
 
         self.features = nn.Sequential(
-            nn.Conv2d(3, 16, kernel_size=5, stride=2, padding=1),
-            nn.BatchNorm2d(16),
-            nn.ReLU(inplace=True),
-
-            nn.Conv2d(16, 32, kernel_size=5, stride=2, padding=1),
+            # Conv Block 1
+            nn.Conv2d(3, 32, kernel_size=5, stride=1, padding=2),
             nn.BatchNorm2d(32),
             nn.ReLU(inplace=True),
+            nn.MaxPool2d(2, 2),        # 200x200 -> 100x100
 
-            nn.Conv2d(32, 64, kernel_size=3, stride=2, padding=1),
+            # Conv Block 2
+            nn.Conv2d(32, 64, kernel_size=5, stride=1, padding=2),
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
+            nn.MaxPool2d(2, 2),        # 100x100 -> 50x50
 
-            nn.Conv2d(64, 10, kernel_size=3, stride=3),
-            nn.BatchNorm2d(10),
-            nn.ReLU(inplace=True),
-            nn.Flatten()
-        )
-
-        self.classifier = nn.Linear(10 * 8 * 8, num_classes)
-
-    def forward(self, x):
-        x = self.features(x)
-        x = self.classifier(x)
-        return x
-
-    
-    
-class DeeperCNN(nn.Module):
-    def __init__(self, num_classes=36):
-        super(DeeperCNN, self).__init__()
-
-        self.features = nn.Sequential(
-            # Block 1
-            nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm2d(32),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(2),   # 112x112
-
-            # Block 2
-            nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm2d(64),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(2),   # 56x56
-
-            # Block 3
+            # Conv Block 3
             nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(128),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(2),   # 28x28
+            nn.MaxPool2d(2, 2),        # 50x50 -> 25x25
 
-            # Block 4
-            nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm2d(256),
+            # Conv Block 4
+            nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(128),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(2),   # 14x14
+            nn.MaxPool2d(2, 2),        # 25x25 -> 12x12
 
-            # Block 5
-            nn.Conv2d(256, 512, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm2d(512),
-            nn.ReLU(inplace=True),
-            nn.AdaptiveAvgPool2d((1, 1)),   # Global avg pool
+            nn.Dropout(0.3),
             nn.Flatten()
         )
 
+        # fully connected classifier
         self.classifier = nn.Sequential(
+            nn.Linear(128 * 12 * 12, 256),
+            nn.ReLU(),
             nn.Dropout(0.5),
-            nn.Linear(512, num_classes)
+            nn.Linear(256, num_classes)
         )
 
     def forward(self, x):
@@ -195,10 +162,12 @@ def get_asl_dataloader(batch_size = 256, test_size = 0.2):
     print(f"Mean: {mean.tolist()}\nstd: {std.tolist()}")
     
     train_transforms = transforms.Compose([
-        transforms.Resize((img_size, img_size)),
+        transforms.Resize((200, 200)),
         transforms.RandomHorizontalFlip(),
+        transforms.RandomRotation(10),
+        transforms.ColorJitter(brightness=0.2, contrast=0.2),
         transforms.ToTensor(),
-        transforms.Normalize(mean=mean.tolist(), std=std.tolist())
+        transforms.Normalize(mean, std)
     ])
 
     test_transforms = transforms.Compose([

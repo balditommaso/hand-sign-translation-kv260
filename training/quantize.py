@@ -58,7 +58,7 @@ def quantize(build_dir, quant_mode, batchsize):
 
   # load trained model
   model = CNN().to(device)
-  model.load_state_dict(torch.load(os.path.join(float_model,'f_model.pth')))
+  model.load_state_dict(torch.load(os.path.join(float_model,'f_model.pth'), map_location="cpu"))
 
   # force to merge BN with CONV for better quantization accuracy
   optimize = 1
