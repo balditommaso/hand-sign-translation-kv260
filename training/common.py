@@ -32,7 +32,7 @@ from sklearn.model_selection import train_test_split
 
 
 class CNN(nn.Module):
-    def __init__(self, num_classes=36):
+    def __init__(self, num_classes=29):
         super(CNN, self).__init__()
 
         self.features = nn.Sequential(
@@ -54,12 +54,13 @@ class CNN(nn.Module):
             nn.Flatten()
         )
 
-        self.classifier = nn.Linear(10 * 9 * 9, num_classes)
+        self.classifier = nn.Linear(10 * 8 * 8, num_classes)
 
     def forward(self, x):
         x = self.features(x)
         x = self.classifier(x)
         return x
+
     
     
 class DeeperCNN(nn.Module):
@@ -171,25 +172,28 @@ def compute_mean_std(dataset):
     return mean, std
 
 
-def get_asl_dataloader(batch_size = 16, test_size = 0.2):
-    path = kagglehub.dataset_download("jeyasrisenthil/hand-signs-asl-hand-sign-data")
+def get_asl_dataloader(batch_size = 256, test_size = 0.2):
+    path = kagglehub.dataset_download("grassknoted/asl-alphabet")
     print("Path to dataset files:", path)
 
-    data_root = os.path.join(path, "DATASET")  # adjust if you see an extra nested folder
+    data_root = os.path.join(path, "asl_alphabet_train/asl_alphabet_train")  # adjust if you see an extra nested folder
 
     full_dataset = datasets.ImageFolder(root=data_root, transform=transforms.ToTensor())
+    print(f"Classes: {full_dataset.classes}")
     targets = [label for _, label in full_dataset.samples]
 
-    train_idx, val_idx = train_test_split(
+    train_idx, test_idx = train_test_split(
         range(len(full_dataset)),
         test_size=test_size,
         stratify=targets,
         random_state=42
     )
-    img_size = 224
+    img_size = 200
     train_dataset = Subset(full_dataset, train_idx)
-    val_dataset = Subset(full_dataset, val_idx)
+    test_dataset = Subset(full_dataset, test_idx)
     mean, std = compute_mean_std(train_dataset)
+    print(f"Mean: {mean.tolist()}\nstd: {std.tolist()}")
+    
     train_transforms = transforms.Compose([
         transforms.Resize((img_size, img_size)),
         transforms.RandomHorizontalFlip(),
@@ -204,30 +208,12 @@ def get_asl_dataloader(batch_size = 16, test_size = 0.2):
     ])
 
     train_dataset.dataset.transform = train_transforms
-    val_dataset.dataset.transform = test_transforms
+    test_dataset.dataset.transform = test_transforms
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
-    val_loader  = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
+    test_loader  = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
     
-    return train_loader, val_loader
+    return train_loader, test_loader
 
-
-# ''' image transformation for training '''
-# train_transform = torchvision.transforms.Compose([
-#                            torchvision.transforms.RandomAffine(5,translate=(0.1,0.1)),
-#                            torchvision.transforms.ToTensor()
-#                            ])
-
-# ''' image transformation for test '''
-# test_transform = torchvision.transforms.Compose([
-#                            torchvision.transforms.ToTensor()
-#                            ])
-
-
-
-# ''' image transformation for image generation '''
-# gen_transform = torchvision.transforms.Compose([
-#                            torchvision.transforms.ToTensor()
-#                            ])
 
 

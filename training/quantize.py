@@ -100,7 +100,7 @@ def run_main():
   ap = argparse.ArgumentParser()
   ap.add_argument('-d',  '--build_dir',  type=str, default='build',    help='Path to build folder. Default is build')
   ap.add_argument('-q',  '--quant_mode', type=str, default='calib',    choices=['calib','test'], help='Quantization mode (calib or test). Default is calib')
-  ap.add_argument('-b',  '--batchsize',  type=int, default=16,        help='Testing batchsize - must be an integer. Default is 100')
+  ap.add_argument('-b',  '--batchsize',  type=int, default=1024,        help='Testing batchsize - must be an integer. Default is 100')
   args = ap.parse_args()
 
   print('\n'+DIVIDER)

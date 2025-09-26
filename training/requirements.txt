@@ -1,0 +1,32 @@
+backports.functools-lru-cache
+ck
+colorama
+dill
+flit-core
+fonttools
+graphviz
+h5py
+jupyter
+kagglehub
+marshmallow
+matplotlib
+munkres
+olefile
+opencv-contrib-python
+orderedset
+pandas
+pip-chill
+progressbar2
+protobuf
+pybind11
+pybind11-global
+pytest
+# pytorch-nndct
+# sc
+scikit-learn
+tabulate
+toml
+torchvision
+unicodedata2
+# vai-utf
+# xnnc

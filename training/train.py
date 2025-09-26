@@ -84,8 +84,8 @@ def run_main():
     # construct the argument parser and parse the arguments
     ap = argparse.ArgumentParser()
     ap.add_argument('-d', '--build_dir',   type=str,  default='build',       help='Path to build folder. Default is build')
-    ap.add_argument('-b', '--batchsize',   type=int,  default=16,           help='Training batchsize. Must be an integer. Default is 100')
-    ap.add_argument('-e', '--epochs',      type=int,  default=20,             help='Number of training epochs. Must be an integer. Default is 3')
+    ap.add_argument('-b', '--batchsize',   type=int,  default=1024,           help='Training batchsize. Must be an integer. Default is 100')
+    ap.add_argument('-e', '--epochs',      type=int,  default=5,             help='Number of training epochs. Must be an integer. Default is 3')
     ap.add_argument('-lr','--learnrate',   type=float,default=0.001,         help='Optimizer learning rate. Must be floating-point value. Default is 0.001')
     args = ap.parse_args()
 
