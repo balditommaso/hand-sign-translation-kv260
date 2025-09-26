@@ -22,12 +22,8 @@ source run_all.sh
 
 NOTE: the compiled model will be stored in the build directory, then you have to move it in the KV260 (e.g. via `scp`).
 
-## TODO:
-- video collection pipeline.
-- Yolo hands detection.
-
 ## Red Team:
 - @smanoni (*UNIBO*)
 - @creinwar (*ETH*)
 - @balditommaso (*SSSA*)
-
+- @martinowiczzz (*UP*)
